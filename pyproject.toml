@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "burn-rate-alert-rule-generator"
+version = "0.1.0"
+description = "Generate Prometheus multi-window, multi-burn-rate recording and alerting rules from SLO definitions."
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Justin Are" }]
+requires-python = ">=3.11"
+keywords = ["slo", "prometheus", "burn-rate", "alerting", "sre", "cli"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = ["PyYAML>=6"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.urls]
+Homepage = "https://github.com/jare20895/burn-rate-alert-rule-generator"
+Issues = "https://github.com/jare20895/burn-rate-alert-rule-generator/issues"
+
+[project.scripts]
+"burn-rate-alert-rule-generator" = "burn_rate_alert_rule_generator.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
