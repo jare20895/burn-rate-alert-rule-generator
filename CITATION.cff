@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: burn-rate-alert-rule-generator
+abstract: Generate Prometheus multi-window, multi-burn-rate alerting and recording rules from SLO definitions.
+authors:
+  - name: Justin Are
+license: MIT
+repository-code: https://github.com/jare20895/burn-rate-alert-rule-generator

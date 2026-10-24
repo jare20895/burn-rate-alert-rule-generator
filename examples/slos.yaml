@@ -1,0 +1,20 @@
+# Synthetic SLO definitions for the burn-rate-alert-rule-generator demo. Not from a real system.
+service: checkout-api
+runbook_url: https://runbooks.example.com/checkout-api
+labels:
+  team: payments
+slos:
+  - name: availability
+    description: Checkout API availability
+    objective: 99.9
+    window: 30d
+    total: sum(rate(http_requests_total{service="checkout-api"}[{{window}}]))
+    errors: sum(rate(http_requests_total{service="checkout-api", code=~"5.."}[{{window}}]))
+  - name: latency
+    description: Checkout API requests under 500ms
+    objective: 99.5
+    window: 30d
+    total: sum(rate(http_request_duration_seconds_count{service="checkout-api"}[{{window}}]))
+    good: sum(rate(http_request_duration_seconds_bucket{service="checkout-api", le="0.5"}[{{window}}]))
+    labels:
+      tier: "2"

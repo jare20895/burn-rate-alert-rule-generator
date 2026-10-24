@@ -1,0 +1,7 @@
+service: checkout-api
+slos:
+  - name: availability
+    objective: 120
+    window: 30d
+    total: sum(rate(http_requests_total[{{window}}]))
+    errors: sum(rate(http_errors_total[{{window}}]))

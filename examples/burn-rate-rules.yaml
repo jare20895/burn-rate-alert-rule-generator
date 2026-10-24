@@ -1,0 +1,164 @@
+groups:
+- name: slo-checkout_api-availability
+  rules:
+  - record: slo:checkout_api_availability:error_ratio_5m
+    expr: (sum(rate(http_requests_total{service="checkout-api", code=~"5.."}[5m]))) / (sum(rate(http_requests_total{service="checkout-api"}[5m])))
+  - record: slo:checkout_api_availability:error_ratio_30m
+    expr: (sum(rate(http_requests_total{service="checkout-api", code=~"5.."}[30m]))) / (sum(rate(http_requests_total{service="checkout-api"}[30m])))
+  - record: slo:checkout_api_availability:error_ratio_1h
+    expr: (sum(rate(http_requests_total{service="checkout-api", code=~"5.."}[1h]))) / (sum(rate(http_requests_total{service="checkout-api"}[1h])))
+  - record: slo:checkout_api_availability:error_ratio_2h
+    expr: (sum(rate(http_requests_total{service="checkout-api", code=~"5.."}[2h]))) / (sum(rate(http_requests_total{service="checkout-api"}[2h])))
+  - record: slo:checkout_api_availability:error_ratio_6h
+    expr: (sum(rate(http_requests_total{service="checkout-api", code=~"5.."}[6h]))) / (sum(rate(http_requests_total{service="checkout-api"}[6h])))
+  - record: slo:checkout_api_availability:error_ratio_1d
+    expr: (sum(rate(http_requests_total{service="checkout-api", code=~"5.."}[1d]))) / (sum(rate(http_requests_total{service="checkout-api"}[1d])))
+  - record: slo:checkout_api_availability:error_ratio_3d
+    expr: (sum(rate(http_requests_total{service="checkout-api", code=~"5.."}[3d]))) / (sum(rate(http_requests_total{service="checkout-api"}[3d])))
+  - alert: checkout_api_availability_page_burn_1h
+    expr: slo:checkout_api_availability:error_ratio_1h > 0.0144 and slo:checkout_api_availability:error_ratio_5m
+      > 0.0144
+    labels:
+      team: payments
+      severity: critical
+      service: checkout-api
+      slo: availability
+      burn_rate_kind: page
+    annotations:
+      summary: 'Checkout API availability: 14.4x burn over 1h and 5m'
+      description: Error ratio is above 0.0144 (14.4x the 0.001 error budget) over both 1h and 5m. At
+        this rate about 2.00% of the 30d error budget is spent every 1h.
+      budget_consumed_percent: '2.00'
+      runbook_url: https://runbooks.example.com/checkout-api
+  - alert: checkout_api_availability_page_burn_6h
+    expr: slo:checkout_api_availability:error_ratio_6h > 0.006 and slo:checkout_api_availability:error_ratio_30m
+      > 0.006
+    labels:
+      team: payments
+      severity: critical
+      service: checkout-api
+      slo: availability
+      burn_rate_kind: page
+    annotations:
+      summary: 'Checkout API availability: 6x burn over 6h and 30m'
+      description: Error ratio is above 0.006 (6x the 0.001 error budget) over both 6h and 30m. At this
+        rate about 5.00% of the 30d error budget is spent every 6h.
+      budget_consumed_percent: '5.00'
+      runbook_url: https://runbooks.example.com/checkout-api
+  - alert: checkout_api_availability_ticket_burn_1d
+    expr: slo:checkout_api_availability:error_ratio_1d > 0.003 and slo:checkout_api_availability:error_ratio_2h
+      > 0.003
+    labels:
+      team: payments
+      severity: warning
+      service: checkout-api
+      slo: availability
+      burn_rate_kind: ticket
+    annotations:
+      summary: 'Checkout API availability: 3x burn over 1d and 2h'
+      description: Error ratio is above 0.003 (3x the 0.001 error budget) over both 1d and 2h. At this
+        rate about 10.00% of the 30d error budget is spent every 1d.
+      budget_consumed_percent: '10.00'
+      runbook_url: https://runbooks.example.com/checkout-api
+  - alert: checkout_api_availability_ticket_burn_3d
+    expr: slo:checkout_api_availability:error_ratio_3d > 0.001 and slo:checkout_api_availability:error_ratio_6h
+      > 0.001
+    labels:
+      team: payments
+      severity: warning
+      service: checkout-api
+      slo: availability
+      burn_rate_kind: ticket
+    annotations:
+      summary: 'Checkout API availability: 1x burn over 3d and 6h'
+      description: Error ratio is above 0.001 (1x the 0.001 error budget) over both 3d and 6h. At this
+        rate about 10.00% of the 30d error budget is spent every 3d.
+      budget_consumed_percent: '10.00'
+      runbook_url: https://runbooks.example.com/checkout-api
+- name: slo-checkout_api-latency
+  rules:
+  - record: slo:checkout_api_latency:error_ratio_5m
+    expr: (1 - (sum(rate(http_request_duration_seconds_bucket{service="checkout-api", le="0.5"}[5m])))
+      / (sum(rate(http_request_duration_seconds_count{service="checkout-api"}[5m]))))
+  - record: slo:checkout_api_latency:error_ratio_30m
+    expr: (1 - (sum(rate(http_request_duration_seconds_bucket{service="checkout-api", le="0.5"}[30m])))
+      / (sum(rate(http_request_duration_seconds_count{service="checkout-api"}[30m]))))
+  - record: slo:checkout_api_latency:error_ratio_1h
+    expr: (1 - (sum(rate(http_request_duration_seconds_bucket{service="checkout-api", le="0.5"}[1h])))
+      / (sum(rate(http_request_duration_seconds_count{service="checkout-api"}[1h]))))
+  - record: slo:checkout_api_latency:error_ratio_2h
+    expr: (1 - (sum(rate(http_request_duration_seconds_bucket{service="checkout-api", le="0.5"}[2h])))
+      / (sum(rate(http_request_duration_seconds_count{service="checkout-api"}[2h]))))
+  - record: slo:checkout_api_latency:error_ratio_6h
+    expr: (1 - (sum(rate(http_request_duration_seconds_bucket{service="checkout-api", le="0.5"}[6h])))
+      / (sum(rate(http_request_duration_seconds_count{service="checkout-api"}[6h]))))
+  - record: slo:checkout_api_latency:error_ratio_1d
+    expr: (1 - (sum(rate(http_request_duration_seconds_bucket{service="checkout-api", le="0.5"}[1d])))
+      / (sum(rate(http_request_duration_seconds_count{service="checkout-api"}[1d]))))
+  - record: slo:checkout_api_latency:error_ratio_3d
+    expr: (1 - (sum(rate(http_request_duration_seconds_bucket{service="checkout-api", le="0.5"}[3d])))
+      / (sum(rate(http_request_duration_seconds_count{service="checkout-api"}[3d]))))
+  - alert: checkout_api_latency_page_burn_1h
+    expr: slo:checkout_api_latency:error_ratio_1h > 0.072 and slo:checkout_api_latency:error_ratio_5m
+      > 0.072
+    labels:
+      team: payments
+      tier: '2'
+      severity: critical
+      service: checkout-api
+      slo: latency
+      burn_rate_kind: page
+    annotations:
+      summary: 'Checkout API requests under 500ms: 14.4x burn over 1h and 5m'
+      description: Error ratio is above 0.072 (14.4x the 0.005 error budget) over both 1h and 5m. At this
+        rate about 2.00% of the 30d error budget is spent every 1h.
+      budget_consumed_percent: '2.00'
+      runbook_url: https://runbooks.example.com/checkout-api
+  - alert: checkout_api_latency_page_burn_6h
+    expr: slo:checkout_api_latency:error_ratio_6h > 0.03 and slo:checkout_api_latency:error_ratio_30m
+      > 0.03
+    labels:
+      team: payments
+      tier: '2'
+      severity: critical
+      service: checkout-api
+      slo: latency
+      burn_rate_kind: page
+    annotations:
+      summary: 'Checkout API requests under 500ms: 6x burn over 6h and 30m'
+      description: Error ratio is above 0.03 (6x the 0.005 error budget) over both 6h and 30m. At this
+        rate about 5.00% of the 30d error budget is spent every 6h.
+      budget_consumed_percent: '5.00'
+      runbook_url: https://runbooks.example.com/checkout-api
+  - alert: checkout_api_latency_ticket_burn_1d
+    expr: slo:checkout_api_latency:error_ratio_1d > 0.015 and slo:checkout_api_latency:error_ratio_2h
+      > 0.015
+    labels:
+      team: payments
+      tier: '2'
+      severity: warning
+      service: checkout-api
+      slo: latency
+      burn_rate_kind: ticket
+    annotations:
+      summary: 'Checkout API requests under 500ms: 3x burn over 1d and 2h'
+      description: Error ratio is above 0.015 (3x the 0.005 error budget) over both 1d and 2h. At this
+        rate about 10.00% of the 30d error budget is spent every 1d.
+      budget_consumed_percent: '10.00'
+      runbook_url: https://runbooks.example.com/checkout-api
+  - alert: checkout_api_latency_ticket_burn_3d
+    expr: slo:checkout_api_latency:error_ratio_3d > 0.005 and slo:checkout_api_latency:error_ratio_6h
+      > 0.005
+    labels:
+      team: payments
+      tier: '2'
+      severity: warning
+      service: checkout-api
+      slo: latency
+      burn_rate_kind: ticket
+    annotations:
+      summary: 'Checkout API requests under 500ms: 1x burn over 3d and 6h'
+      description: Error ratio is above 0.005 (1x the 0.005 error budget) over both 3d and 6h. At this
+        rate about 10.00% of the 30d error budget is spent every 3d.
+      budget_consumed_percent: '10.00'
+      runbook_url: https://runbooks.example.com/checkout-api
